@@ -51,6 +51,7 @@ Archive:  example.zip
 * [ ] encryption;
 * [ ] compression;
 * [ ] utf encoding;
+* [ ] file/archive comments;
 * [ ] store date/time correctly;
 * [ ] support more than 2^16 files;
 
