@@ -46,6 +46,21 @@ Archive:  example.zip
         6                     1 file
 ```
 
+another example, this time archiving a file:
+
+```
+iex> printer = &IO.binwrite/1
+...> File.open("/path/to/file", [:read, :raw, :binary], fn fh ->
+...>   Zipflow.Stream.init
+...>   |> Zipflow.Stream.entry(Zipflow.FileEntry.encode(printer, "foo/bar", fh))
+...>   |> Zipflow.Stream.flush(printer)
+...> end)
+```
+
+the `FileEntry` consumes the file in chunks so it has a low memory
+footprint. However, this is not zip64 format so the maximum file size
+you can archive is 4G.
+
 ## todo
 
 * [ ] encryption;
