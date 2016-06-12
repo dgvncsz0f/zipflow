@@ -73,4 +73,4 @@ size you can archive is 4G.
 
 ## licence
 
-bsd3
+BSD-3
