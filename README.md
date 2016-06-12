@@ -58,14 +58,15 @@ iex> printer = &IO.binwrite/1
 ```
 
 the `FileEntry` consumes the file in chunks so it has a low memory
-footprint. However, this is not zip64 format so the maximum file size
-you can archive is 4G.
+footprint. However, this is not a zip64 format so the maximum file
+size you can archive is 4G.
 
 ## todo
 
 * [ ] encryption;
 * [ ] compression;
 * [ ] utf encoding;
+* [ ] zip64 format;
 * [ ] file/archive comments;
 * [ ] store date/time correctly;
 * [ ] support more than 2^16 files;
