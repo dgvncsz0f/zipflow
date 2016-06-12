@@ -53,3 +53,7 @@ Archive:  example.zip
 * [ ] utf encoding;
 * [ ] store date/time correctly;
 * [ ] support more than 2^16 files;
+
+## licence
+
+bsd3
