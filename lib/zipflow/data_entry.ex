@@ -24,7 +24,7 @@ defmodule Zipflow.DataEntry do
   shouldn't use this to store large data. Consider using
   `Zipflow.Spec.StoreEntry` directly.
   """
-  @spec encode((binary -> ()), String.t, binary) :: {LFH.t, Entry.t}
+  @spec encode((binary -> ()), String.t, bitstring) :: {LFH.t, Entry.t}
   def encode(printer, name, data) do
     header  = LFH.encode(printer, name)
     payload = StoreEntry.init(printer)
