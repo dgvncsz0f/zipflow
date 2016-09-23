@@ -11,6 +11,7 @@ defmodule Zipflow.Mixfile do
                 links: %{"github" => "http://github.com/dgvncsz0f/zipflow"}
               ],
      description: description,
+     elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod]
   end
@@ -18,6 +19,9 @@ defmodule Zipflow.Mixfile do
   def application do
     [applications: []]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   defp deps do
     [{:dialyxir, "~> 0.3.5", only: :dev},
