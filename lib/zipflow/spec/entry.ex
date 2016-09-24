@@ -1,6 +1,6 @@
 defmodule Zipflow.Spec.Entry do
 
-  @defmodule """
+  @moduledoc """
   Represents an entry in a zip archive. For example, the `StoreEntry`
   module is used to include entries with no compression.
 
@@ -8,10 +8,10 @@ defmodule Zipflow.Spec.Entry do
   then finally `finalize`
   """
 
-  @type t :: %{crc: integer, csize: non_neg_integer, usize: non_neg_integer, private: any}
+  @type t :: %{crc: integer, size: non_neg_integer, csize: non_neg_integer, usize: non_neg_integer, private: any}
 
   @doc """
-  Initializes the entry. You must provide the `output' function.
+  Initializes the entry. You must provide the 'output' function.
   """
   @callback init((binary -> ())) :: t
 
@@ -19,7 +19,7 @@ defmodule Zipflow.Spec.Entry do
   add data to this entry. this function may be invoked multiple times
   as long as you sequence the return values properly.
   """
-  @callback data(t, binary) :: t
+  @callback data(t, bitstring) :: t
 
   @doc """
   finalize this entry. the return value must be kept as it is

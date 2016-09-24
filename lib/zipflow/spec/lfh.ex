@@ -1,5 +1,5 @@
 defmodule Zipflow.Spec.LFH do
-  @type t :: %{size: integer, name: String.t, n_size: integer}
+  @type t :: %{size: non_neg_integer, name: String.t, n_size: non_neg_integer}
 
 
   @moduledoc """

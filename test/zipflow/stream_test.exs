@@ -5,36 +5,33 @@ defmodule Zipflow.StreamTest do
   alias Zipflow.DataEntry
   alias Zipflow.FileEntry
 
-  setup do
-    {:ok, dev} = StringIO.open("")
+  import Test.Zipflow.Support.Helpers
 
-    readdev = fn -> case StringIO.contents(dev) do
-                      {"", data} -> data
-                    end
-              end
+  test "stream data_entry" do
+    ramdev fn contents, printer ->
+      rnddata = :rand.uniform |> Float.to_string
 
-    {:ok, %{readdev: readdev, printer: &IO.binwrite(dev, &1)}}
-  end
-
-  test "stream data_entry", %{readdev: readdev, printer: printer} do
-    rnddata = :rand.uniform |> Float.to_string
-    Stream.init
-    |> Stream.entry(DataEntry.encode(printer, "foobar", rnddata))
-    |> Stream.flush(printer)
-
-    assert {:ok, [{'foobar', rnddata}]} == :zip.extract(readdev.(), [:memory])
-  end
-
-  test "stream file_entry", %{readdev: readdev, printer: printer} do
-    path     = __ENV__.file
-    data     = File.read!(path)
-    {:ok, _} = File.open(path, [:read, :raw, :binary], fn fh ->
       Stream.init
-      |> Stream.entry(FileEntry.encode(printer, "foobar", fh))
+      |> Stream.entry(DataEntry.encode(printer, "foobar", rnddata))
       |> Stream.flush(printer)
-    end)
 
-    assert {:ok, [{'foobar', data}]} == :zip.extract(readdev.(), [:memory])
+      assert {:ok, [{'foobar', rnddata}]} == :zip.extract(contents.(), [:memory])
+    end
+  end
+
+  test "stream file_entry" do
+    ramdev fn contents, printer ->
+      path = __ENV__.file
+      data = File.read!(path)
+
+      {:ok, _} = File.open(path, [:read, :raw, :binary], fn fh ->
+        Stream.init
+        |> Stream.entry(FileEntry.encode(printer, "foobar", fh))
+        |> Stream.flush(printer)
+      end)
+
+      assert {:ok, [{'foobar', data}]} == :zip.extract(contents.(), [:memory])
+    end
   end
 
 end
