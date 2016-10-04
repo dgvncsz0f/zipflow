@@ -10,6 +10,7 @@ defmodule Zipflow.Mixfile do
                 licenses: ["BSD-3"],
                 links: %{"github" => "http://github.com/dgvncsz0f/zipflow"}
               ],
+     escript: [main_module: Zip],
      description: description,
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,

@@ -25,19 +25,21 @@ file while it is being created.
 
 ## example
 
-this example writes a zip file to stdout:
+this example writes a zip file to a file:
 
 ```
-iex> printer = &IO.binwrite/1
-...> Zipflow.Stream.init
-...> |> Zipflow.Stream.entry(Zipflow.DataEntry.encode(printer, "foo/bar", "foobar"))
-...> |> Zipflow.Stream.flush(printer)
+iex> File.open("/path/to/file", [:raw, :binary, :write], fn fh ->
+...>   printer = & IO.binwrite(fh, &1)
+...>   Zipflow.Stream.init
+...>   |> Zipflow.Stream.entry(Zipflow.DataEntry.encode(printer, "foo/bar", "foobar"))
+...>   |> Zipflow.Stream.flush(printer)
+...> end)
 ```
 
 Then you should have:
 
 ```
-$ unzip -l example.zip
+$ unzip -l /path/to/file
 Archive:  example.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
@@ -49,8 +51,8 @@ Archive:  example.zip
 another example, this time archiving a file:
 
 ```
-iex> printer = &IO.binwrite/1
-...> File.open("/path/to/file", [:read, :raw, :binary], fn fh ->
+iex> File.open("/path/to/file", [:read, :raw, :binary], fn fh ->
+...>   printer = & IO.binwrite(fh, &1)
 ...>   Zipflow.Stream.init
 ...>   |> Zipflow.Stream.entry(Zipflow.FileEntry.encode(printer, "foo/bar", fh))
 ...>   |> Zipflow.Stream.flush(printer)
@@ -60,6 +62,20 @@ iex> printer = &IO.binwrite/1
 the `FileEntry` consumes the file in chunks so it has a low memory
 footprint. However, this is not a zip64 format so the maximum file
 size you can archive is 4G.
+
+There is a script you can use for testing. It archives a directory:
+
+```
+$ mix escript.build
+$ ./zipflow /tmp/zipflow.zip lib/bin
+$ unzip -l /tmp/zipflow.zip
+Archive:  /tmp/zipflow.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+      301  1980-00-00 00:00   lib/bin/zip.ex
+---------                     -------
+      301                     1 file
+```
 
 ## todo
 
