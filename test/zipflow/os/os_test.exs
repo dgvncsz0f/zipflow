@@ -18,7 +18,7 @@ defmodule Zipflow.OSTest do
     end
   end
 
-  test "simple directory" do
+  test "simple case" do
     ramdev fn contents, printer ->
       mkstemp_dir fn tmpdir ->
         File.touch(Path.expand("foobar", tmpdir))
@@ -32,7 +32,7 @@ defmodule Zipflow.OSTest do
     end
   end
 
-  test "complex directory" do
+  test "absolute directories" do
     ramdev fn contents, printer ->
       blueprint = mkstemp_dir fn tmpdir ->
         blueprint = build_dir(tmpdir, "")
@@ -42,6 +42,29 @@ defmodule Zipflow.OSTest do
         |> Stream.flush(printer)
 
         blueprint
+      end
+
+      blueprint = Enum.map(blueprint, & {String.to_charlist(&1), &1})
+      {:ok, zipfiles} = :zip.extract(contents.(), [:memory])
+
+      assert Enum.sort(zipfiles) == Enum.sort(blueprint)
+    end
+  end
+
+  test "relative directories" do
+    ramdev fn contents, printer ->
+      blueprint = mkstemp_dir fn tmpdir ->
+        blueprint = build_dir(tmpdir, "")
+        directory = blueprint
+        |> Enum.random
+        |> Path.dirname
+
+        Stream.init
+        |> OS.dir_entry(printer, directory)
+        |> Stream.flush(printer)
+
+        blueprint
+        |> Enum.filter(& String.starts_with?(&1, directory))
       end
 
       blueprint = Enum.map(blueprint, & {String.to_charlist(&1), &1})
@@ -156,6 +179,13 @@ defmodule Zipflow.OSTest do
 
       assert {:error, :enotdir} == result
     end
+  end
+
+  test "relative_to_cwd_fn" do
+    dirname = Path.expand(".") |> Path.basename
+    assert "foobar" == OS.relative_to_cwd_fn(".").(Path.expand("foobar"))
+    assert "lib/foobar" == OS.relative_to_cwd_fn("./lib").(Path.expand("lib/foobar"))
+    assert "#{dirname}/foobar" == OS.relative_to_cwd_fn("..").(Path.expand("foobar"))
   end
 
 end

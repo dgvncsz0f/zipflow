@@ -26,7 +26,9 @@ defmodule Test.Zipflow.Support.Helpers do
              |> Path.expand(System.tmp_dir!)
     File.mkdir!(tmpdir)
     try do
-      next.(tmpdir)
+      File.cd!(tmpdir, fn ->
+        next.(tmpdir)
+      end)
     after
       File.rm_rf!(tmpdir)
     end

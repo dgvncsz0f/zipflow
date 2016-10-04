@@ -5,12 +5,36 @@ defmodule Zipflow.OS do
 
   alias Zipflow.Stream
 
+  @doc """
+  This functions returns a function that makes paths relatives to a
+  given path. If `path` is absolute then no tranformation is done.
+  Otherwise, it applies the `Path.relative_to/2` function using either
+  `File.cwd/0` when path is a subdir of the current working dir or
+  `path`.
+  """
+  def relative_to_cwd_fn(path) do
+    abs = Path.expand(path)
+    cwd = case File.cwd do
+            {:ok, cwd} -> cwd
+            _otherwise -> "/"
+          end
+    case Path.type(path) do
+      :absolute  -> & &1
+      _otherwise ->
+        if String.starts_with?(abs, cwd) do
+          & Path.relative_to(&1, cwd)
+        else
+          & Path.relative_to(&1, abs)
+        end
+    end
+  end
+
   defp abspath(items, root) do
     Enum.map(items, & Path.expand(&1, root))
   end
 
   defp maybe_add_file(context, printer, path, options) do
-    rename = Keyword.get(options, :rename, fn x -> x end)
+    rename = Keyword.fetch!(options, :rename)
     file_entry(context, printer, rename.(path), path)
   end
 
@@ -51,7 +75,7 @@ defmodule Zipflow.OS do
   * `options`:
      A keyword list; valid values are:
 
-      * `rename` (default: `fn x -> x end`):
+  * `rename` (default: `relative_to_cwd_fn/1`):
       A function that takes a path and return a path. The returning
       value is the name on the zip archive;
 
@@ -85,6 +109,7 @@ defmodule Zipflow.OS do
                   ]
                  ) :: Stream.context | {:error, any}
   def dir_entry(context, printer, path, options \\ []) do
+    options = Keyword.put_new(options, :rename, relative_to_cwd_fn(path))
     if File.dir?(path) do
       dir_loop(context, printer, [[path]], options)
     else
