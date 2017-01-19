@@ -3,7 +3,7 @@ defmodule Zipflow.Mixfile do
 
   def project do
     [app: :zipflow,
-     deps: deps,
+     deps: deps(),
      elixir: "~> 1.2",
      version: "0.0.1",
      package: [ maintainers: ["dgvncsz0f"],
@@ -11,7 +11,7 @@ defmodule Zipflow.Mixfile do
                 links: %{"github" => "http://github.com/dgvncsz0f/zipflow"}
               ],
      escript: [main_module: Zip],
-     description: description,
+     description: description(),
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod]
