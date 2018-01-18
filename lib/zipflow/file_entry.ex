@@ -33,7 +33,7 @@ defmodule Zipflow.FileEntry do
   end)
   ```
   """
-  @spec encode((binary -> ()), String.t, File.io_device) :: {LFH.t, Entry.t} | {:error, String.t}
+  @spec encode((binary -> any), String.t, File.io_device) :: {LFH.t, Entry.t} | {:error, String.t}
   def encode(printer, name, fh) do
     header = LFH.encode(printer, name)
     StoreEntry.init(printer)

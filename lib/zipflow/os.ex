@@ -88,7 +88,7 @@ defmodule Zipflow.OS do
   # example #
 
   ```
-  iex> devnull = fn _ -> () end
+  iex> devnull = fn _ -> nil end
   iex> Zipflow.Stream.init
   ...> |> dir_entry(devnull, "/path/to/dir")
   ...> |> Zipflow.Stream.flush(devnull)
@@ -102,7 +102,7 @@ defmodule Zipflow.OS do
   be an issue for large/deep directories.
   """
   @spec dir_entry(Stream.context,
-                  (binary -> ()),
+                  (binary -> any),
                   Path.t,
                   [ {:rename, (Path.t -> Path.t)},
                     {:accept, (Path.t -> boolean)}
@@ -126,13 +126,13 @@ defmodule Zipflow.OS do
   `foobar`. Remember to replace `devnull` by an actual printer.
 
   ```
-  iex> devnull = fn _ -> () end
+  iex> devnull = fn _ -> nil end
   iex> Zipflow.Stream.init
   ...> |> file_entry(context, devnull, "foobar", "/path/to/file")
   ...> |> Zipflow.Stream.flush(devnull)
   ```
   """
-  @spec file_entry(Stream.context, (binary -> ()), Path.t, Path.t) :: Stream.context | {:error, any}
+  @spec file_entry(Stream.context, (binary -> any), Path.t, Path.t) :: Stream.context | {:error, any}
   def file_entry(context, printer, name, path) do
     File.open(path, [:raw, :binary, :read], fn fh ->
       entry = Zipflow.FileEntry.encode(printer, name, fh)

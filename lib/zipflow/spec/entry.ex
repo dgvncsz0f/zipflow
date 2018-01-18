@@ -13,7 +13,7 @@ defmodule Zipflow.Spec.Entry do
   @doc """
   Initializes the entry. You must provide the 'output' function.
   """
-  @callback init((binary -> ())) :: t
+  @callback init((binary -> any)) :: t
 
   @doc """
   add data to this entry. this function may be invoked multiple times

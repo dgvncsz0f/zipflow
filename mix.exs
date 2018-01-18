@@ -25,8 +25,8 @@ defmodule Zipflow.Mixfile do
   defp elixirc_paths(_),     do: ["lib"]
 
   defp deps do
-    [{:dialyxir, "~> 0.3.5", only: :dev},
-     {:ex_doc, "~> 0.13", only: :dev}]
+    [{:dialyxir, "~> 0.5.1", only: :dev},
+     {:ex_doc, "~> 0.18", only: :dev}]
   end
 
   defp description do

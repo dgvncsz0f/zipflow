@@ -20,7 +20,7 @@ defmodule Zipflow.Spec.CDH do
   ...> Zipflow.Spec.CDH.encode(&IO.binwrite/1, [entry])
   ```
   """
-  @spec encode((binary -> ()), [{Zipflow.Spec.LFH.t, Zipflow.Spec.Entry.t}]) :: ()
+  @spec encode((binary -> any), [{Zipflow.Spec.LFH.t, Zipflow.Spec.Entry.t}]) :: any
   def encode(printer, contents) do
     ctx = Enum.reduce(contents, %{entries: 0, offset: 0, size: 0}, fn {hframe, dframe}, acc ->
       hdr = header(printer, acc, hframe, dframe)
