@@ -4,7 +4,7 @@ defmodule Zipflow.Spec.CDHTest do
   alias Zipflow.Spec.CDH
 
   test "encode returns ()" do
-    ans = CDH.encode(fn x -> assert is_binary(x); () end, [])
+    ans = CDH.encode(fn x -> assert is_binary(x); nil end, [])
     assert () == ans
   end
 

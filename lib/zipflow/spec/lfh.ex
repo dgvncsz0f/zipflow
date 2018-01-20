@@ -14,7 +14,7 @@ defmodule Zipflow.Spec.LFH do
   return value and use them, in order, to generate the central
   directory header.
   """
-  @spec encode((binary -> ()), String.t) :: t
+  @spec encode((binary -> any), String.t) :: t
   def encode(printer, name) do
     nsize = byte_size(name)
     frame = <<

@@ -4,7 +4,7 @@ defmodule Zipflow.Spec.StoreEntryTest do
   alias Zipflow.Spec.StoreEntry
 
   test "encode return handle" do
-    handle = StoreEntry.init(fn x -> assert is_binary(x); () end)
+    handle = StoreEntry.init(fn x -> assert is_binary(x); nil end)
     |> StoreEntry.term
 
     assert is_integer(handle[:crc])

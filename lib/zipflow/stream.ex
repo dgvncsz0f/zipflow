@@ -54,7 +54,7 @@ defmodule Zipflow.Stream do
   @doc """
   terminates the stream by including the central directory header
   """
-  @spec flush(context, (binary -> ())) :: ()
+  @spec flush(context, (binary -> any)) :: any
   def flush(context, printer) do
     CDH.encode(printer, Enum.reverse(context))
   end
