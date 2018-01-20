@@ -90,3 +90,8 @@ Archive:  /tmp/zipflow.zip
 ## licence
 
 BSD-3
+
+## contributors (thanks!)
+
+* @feymartynov
+* @nicholasjhenry

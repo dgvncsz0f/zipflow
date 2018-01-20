@@ -5,7 +5,7 @@ defmodule Zipflow.Mixfile do
     [app: :zipflow,
      deps: deps(),
      elixir: "~> 1.2",
-     version: "0.0.1",
+     version: "0.0.2",
      package: [ maintainers: ["dgvncsz0f"],
                 licenses: ["BSD-3"],
                 links: %{"github" => "http://github.com/dgvncsz0f/zipflow"}
